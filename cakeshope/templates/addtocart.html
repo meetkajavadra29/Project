@@ -70,7 +70,7 @@
                     <div class="quantity-box">
                         <a href={% url "decrease" prod.product.id %} ><button class="qty-btn minus">-</button></a>
                         <input type="text" value="{{prod.quantity}}" class="qty-input" readonly>
-                    <a href={% url "increase" prod.ko.id %}><button class="qty-btn plus" >+</button></a>
+                    <a href={% url "increase" prod.product.id %}><button class="qty-btn plus" >+</button></a>
                     </div>
                 </div>
                 <a href={%url "remove" prod.product.id%}>
