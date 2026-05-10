@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock title %}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+   <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;400;600&display=swap"
+    rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: #fdf2f5; /* Light pink background to show contrast */
+            min-height: 100vh;
+        }
+
+        /* --- Navbar Styles --- */
+        .navbar {
+            background-color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 5% 0px 5%;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            position: fixed;
+            top: 0;
+            left:0;
+            right:0;
+            z-index: 1000;
+        }
+
+        /* Logo Styling */
+        .logo {
+            font-family: 'Pacifico', cursive; /* Cursive font for cake feel */
+            font-size: 28px;
+            color: #ff6b81; /* Strawberry Pink */
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            font-size: 24px;
+            color: #eebb4d; /* Cake color */
+        }
+
+        /* Navigation Links */
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .nav-links li a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            font-size: 16px;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        /* Underline hover effect */
+        .nav-links li .nav-link-word::after {
+            content: '';
+            width: 0%;
+            height: 2px;
+            background: #ff6b81;
+            display: block;
+            margin: auto;
+            transition: 0.3s;
+        }
+
+        .nav-links li a:hover::after {
+            width: 100%;
+        }
+
+        .nav-links li a:hover {
+            color: #ff6b81;
+        }
+
+        /* Search Bar */
+        .search-box {
+            background: #f0f0f0;
+            border-radius: 30px;
+            padding: 8px 15px;
+            display: flex;
+            align-items: center;
+            transition: 0.4s;
+        }
+
+        .search-box:hover, .search-box:focus-within {
+            background: #fff;
+            box-shadow: 0 0 5px rgba(255, 107, 129, 0.4);
+            border: 1px solid #ff6b81;
+        }
+
+        .search-box input {
+            border: none;
+            background: transparent;
+            outline: none;
+            padding: 0 10px;
+            font-size: 14px;
+            width: 150px;
+        }
+
+        .search-box i {
+            color: #ff6b81;
+            cursor: pointer;
+        }
+
+        /* Auth Buttons (Login/Logout) */
+        .auth-btn {
+            padding: 8px 20px;
+            border-radius: 20px;
+            border: 2px solid #ff6b81;
+            background: transparent;
+            color: #ff6b81;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-left: 20px;
+        }
+
+        .auth-btn:hover {
+            background: #ff6b81;
+            color: white;
+        }
+
+        .auth-btn.logout {
+            border-color: #333;
+            color: #333;
+        }
+        
+        .auth-btn.logout:hover {
+            background: #333;
+            color: #fff;
+        }
+
+        /* Hamburger Menu (Mobile) */
+        .hamburger {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #333;
+        }
+
+        /* --- Mobile Responsiveness --- */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 15px 20px;
+                
+            }
+
+            .hamburger {
+                display: block; /* Show hamburger on mobile */
+            }
+
+            .nav-links {
+                position: absolute;
+                top: 70px; /* Below navbar */
+                left: 0;
+                width: 100%;
+                background: #fff;
+                flex-direction: column;
+                align-items: center;
+                gap: 20px;
+                padding: 20px 0;
+                box-shadow: 0 10px 10px rgba(0,0,0,0.05);
+                
+                /* Animation for sliding */
+                transform: translateY(-150%);
+                transition: transform 0.3s ease;
+                z-index: 999;
+            }
+
+            .nav-links.active {
+                transform: translateY(0%);
+            }
+
+            .search-box {
+                display: none; /* Hide search bar in header on mobile to save space */
+            }
+            
+            /* Add search to mobile menu logic if desired, or keep hidden */
+            .mobile-search {
+                display: flex;
+            }
+
+        }
+        .footer {
+            background-color: #1a1a1a; /* Dark background for contrast */
+            color: #fff;
+            padding: 70px 0 30px;
+            font-size: 14px;
+            line-height: 24px;
+            margin-top: auto; /* Pushes footer to bottom if page is short */
+            position:relative;
+        }
+
+        .container1 {
+            max-width: 1170px;
+            margin: auto;
+            padding: 0 20px;
+        }
+
+        .row1{
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .footer-col {
+            width: 25%;
+            padding: 0 15px;
+            margin-bottom: 30px;
+        }
+
+        /* Column Headers */
+        .footer-col h4 {
+            font-size: 22px;
+            color: #ff6b81; /* Matching Strawberry Pink */
+            text-transform: capitalize;
+            margin-bottom: 25px;
+            font-weight: 600;
+            position: relative;
+            font-family: 'Pacifico', cursive; /* Theme Font */
+        }
+
+        /* Underline decoration for headers */
+        .footer-col h4::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -10px;
+            background-color: #eebb4d; /* Cake/Gold accent */
+            height: 2px;
+            box-sizing: border-box;
+            width: 50px;
+        }
+
+        /* List Links */
+        .footer-col ul {
+            list-style: none;
+            padding:0;
+        }
+
+        .footer-col ul li:not(:last-child) {
+            margin-bottom: 10px;
+        }
+
+        .footer-col ul li a {
+            font-size: 15px;
+            text-transform: capitalize;
+            color: #bbbbbb;
+            text-decoration: none;
+            font-weight: 300;
+            display: block;
+            transition: all 0.3s ease;
+        }
+
+        .footer-col ul li a:hover {
+            color: #ff6b81;
+            padding-left: 8px; /* Slide effect */
+        }
+
+        /* Social Links */
+        .social-links {
+            margin-top: 20px; 
+            display: flex; 
+            gap: 10px;
+        }
+
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 40px;
+            width: 40px;
+            background-color: rgba(255,255,255,0.2);
+            color: #ffffff;
+            border-radius: 50%;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background-color: #ff6b81;
+            transform: translateY(-5px); /* Hop effect */
+        }
+
+        /* Newsletter Input */
+        .newsletter-form {
+            display: flex;
+            margin-top: 15px;
+        }
+
+        .newsletter-form input {
+            padding: 10px;
+            width: 100%;
+            border: none;
+            border-radius: 4px 0 0 4px;
+            outline: none;
+        }
+
+        .newsletter-form button {
+            background-color: #ff6b81;
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .newsletter-form button:hover {
+            background-color: #e0556a;
+        }
+
+        /* Copyright Bar */
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            margin-top: 20px;
+            color: #777;
+            font-size: 13px;
+        }
+
+        .footer-bottom span {
+            color: #ff6b81;
+        }
+
+        /* Responsive */
+        @media(max-width: 767px) {
+            .footer-col {
+                width: 50%;
+                margin-bottom: 30px;
+            }
+        }
+        @media(max-width: 574px) {
+            .footer-col {
+                width: 100%; /* Stack columns on mobile */
+            }
+        }
+        .main_container{
+            position:relative;
+            top:50px;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="/" class="logo">
+            <i class="fas fa-birthday-cake"></i>
+            SweetDelights
+        </a>
+
+        <ul class="nav-links" id="navLinks">
+            <li><a href="/" class="nav-link-word">Home</a></li>
+            <li><a href="/about" class="nav-link-word">About Us</a></li>
+            <li><a href="/order" class="nav-link-word">Order</a></li>
+            
+            <li class="desktop-only">
+                <div class="search-box">
+                    <input type="text" placeholder="Find a cake...">
+                    <i class="fas fa-search"></i>
+                </div>
+            </li>
+            <li><a href="/addtocart"><i class="fa-solid fa-cart-shopping"></i></a></li>
+            <li>
+                {% if user.is_anonymous%}
+                <a href="/loginuser"><button id="authBtn" class="auth-btn">Login</button></a>
+                {%else%}
+                <a href="/logoutuser"><button id="authBtn" class="auth-btn">Logout</button></a>
+                {%endif%}
+
+            </li>
+        </ul>
+
+        <div class="hamburger" onclick="toggleMenu()">
+            <i class="fas fa-bars"></i>
+        </div>
+    </nav>
+
+    {% comment %} <div style="padding: 50px; text-align: center; color: #555;">
+        <h1>Welcome to SweetDelights</h1>
+        <p>Scroll down to see the navbar stick to the top.</p>
+        <br><br>
+        <p>Delicious cakes made with love.</p>
+    </div> {% endcomment %}
+
+    <script>
+        // 1. Mobile Menu Toggle Logic
+        function toggleMenu() {
+            const navLinks = document.getElementById('navLinks');
+            navLinks.classList.toggle('active');
+        }
+
+        // 2. Login / Logout Logic
+        // In a real app, this would check backend session
+        {% comment %} let isLoggedIn = false;
+
+        function toggleAuth() {
+            const btn = document.getElementById('authBtn');
+            
+            if (isLoggedIn) {
+                // Perform Logout
+                isLoggedIn = false;
+                btn.innerText = "Login";
+                btn.classList.remove('logout');
+                alert("You have been logged out.");
+            } else {
+                // Perform Login
+                isLoggedIn = true;
+                btn.innerText = "Logout";
+                btn.classList.add('logout');
+                alert("Welcome back! You are now logged in.");
+            }
+        } {% endcomment %}
+    </script>
+    <div class="main_container">
+    {% block body %}
+    {% endblock body %}
+    </div>
+    <footer class="footer">
+        <div class="container1">
+            <div class="row1">
+                
+                <div class="footer-col">
+                    <h4>SweetDelights</h4>
+                    <p style="color: #bbb; margin-top: 20px;">
+                        Baking happiness since 2010. We use the finest organic ingredients to make your celebrations sweeter.
+                    </p>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="/">Home</a></li>
+                        <li><a href="#">Our Menu</a></li>
+                        <li><a href="#">Wedding Cakes</a></li>
+                        <li><a href="/about">About Us</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Contact Us</h4>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-map-marker-alt"></i> 123 Baker Street, NY</a></li>
+                        <li><a href="tel:+919173636860"><i class="fas fa-phone"></i>+91 9173636860</a></li>
+                        <li><a href="mailto:meetkajavadra@gmail.com"><i class="fas fa-envelope"></i> meetkajavadra@gmail.com</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Newsletter</h4>
+                    <p style="color:#bbb; margin-bottom:10px;">Subscribe for 10% off!</p>
+                    <form class="newsletter-form" onsubmit="subscribeUser(event)">
+                        <input type="email" placeholder="Your email..." required>
+                        <button type="submit"><i class="fas fa-paper-plane"></i></button>
+                    </form>
+
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-pinterest"></i></a>
+                    </div>
+                </div>
+
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; <span id="year"></span> SweetDelights Cake Shop. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 1. Dynamic Year Logic
+        document.getElementById("year").innerHTML = new Date().getFullYear();
+
+        // 2. Newsletter Simulation
+        function subscribeUser(e) {
+            e.preventDefault();
+            alert("Thank you for subscribing to SweetDelights! 🍰");
+            e.target.reset();
+        }
+    </script>
+</body>
+</html>

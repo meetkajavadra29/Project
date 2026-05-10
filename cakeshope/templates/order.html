@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Orders | SweetDelights</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        /* --- Theme Reset --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: #fdf2f5; color: #444; }
+
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .page-title {
+            text-align: center;
+            font-family: 'Pacifico', cursive;
+            color: #ff6b81;
+            font-size: 36px;
+            margin-bottom: 30px;
+        }
+
+        /* --- Order Card --- */
+        .order-card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            margin-bottom: 25px;
+            overflow: hidden;
+            transition: 0.3s;
+            border: 1px solid transparent;
+            
+        }
+
+        .order-card:hover {
+            border-color: #ff6b81;
+            transform: translateY(-3px);
+        }
+
+        /* Card Header (ID, Date, Status) */
+        .card-header {
+            background: #fafafa;
+            padding: 15px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+        }
+
+        .order-id { font-weight: 600; color: #333; }
+        .order-date { color: #888; font-size: 13px; margin-left: 10px; }
+
+        /* Status Badges */
+        .status {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .status.pending { background: #fff3cd; color: #856404; }
+        .status.processing { background: #cce5ff; color: #004085; }
+        .status.delivered { background: #d4edda; color: #155724; }
+        .status.cancelled { background: #f8d7da; color: #721c24; }
+
+        /* Card Body (Items) */
+        .card-body {
+            padding: 20px 25px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .item-list {
+            display: flex;
+            gap: 15px;
+            flex-wrap:wrap;
+            flex: 1;
+        }
+
+        .item-thumb {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 1px solid #eee;
+        }
+
+        .item-text {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .item-text strong { font-size: 14px; color: #333; }
+        .item-text small { color: #888; font-size: 12px; }
+
+        /* Card Footer (Total & Button) */
+        .total-section {
+            text-align: right;
+            min-width: 120px;
+        }
+
+        .total-price {
+            display: block;
+            font-size: 18px;
+            font-weight: 700;
+            color: #ff6b81;
+            margin-bottom: 5px;
+        }
+
+        .view-btn {
+            text-decoration: none;
+            background: #333;
+            color: #fff;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-size: 13px;
+            transition: 0.3s;
+            display: inline-block;
+        }
+
+        .view-btn:hover { background: #555; }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 50px;
+            color: #888;
+        }
+        .empty-state i { font-size: 40px; margin-bottom: 10px; color: #ddd; }
+
+        /* Mobile */
+        @media (max-width: 600px) {
+            .card-body { flex-direction: column; align-items: flex-start; }
+            .total-section { text-align: left; width: 100%; border-top: 1px solid #eee; padding-top: 15px; margin-top: 10px; display: flex; justify-content: space-between; align-items: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1 class="page-title">My Orders</h1>
+        <div style="text-align:right;padding-bottom:40px;padding-right:10px;color:black;">
+        <a href='/' style="padding:12px;text-decoration:none;color:#555;font-size:14px;background-color:#fff;border-radius: 30px;"><i class="fas fa-arrow-left"></i> Continue Shopping</a>
+        </div>
+        {% if orders %}
+            {% for order in orders %}
+            <div class="order-card">
+                <div class="card-header">
+                    <div>
+                        <span class="order-id">#ORD-{{ order.id }}</span>
+                        <span class="order-date">{{ order.o_date|date:"M d, Y" }}</span>
+                    </div>
+                    {%if order.o_status == false%}
+                    <span class="status">Done</span>
+                    {%else%}
+                    <span class="status">preparing</span>
+                    {%endif%}
+
+                </div>
+
+                <div class="card-body">
+                    <div class="item-list">
+                        {%if order_detalis%}
+                        {% for item in order_detalis %}
+                        {%if item.o_id.id == order.id%}
+                        <div style="display: flex; gap: 10px;">
+                            <img src="{{ item.product_id.p_img}}" alt="Cake" class="item-thumb">
+                            <div class="item-text">
+                                <strong>{{ item.product_id.p_name }}</strong>
+                                <small>Qty: {{ item.quantity }}</small>
+                            </div>
+                        </div>
+                        {%endif%}
+                        {% endfor %}
+                        {%endif%}
+                        
+                        {% comment %} {% if order.items.count > 3 %}
+                            <div style="align-self: center; color: #888; font-size: 12px;">
+                                +{{ order.items.count|add:"-3" }} more
+                            </div>
+                        {% endif %} {% endcomment %}
+                    </div>
+
+                    <div class="total-section">
+                        <span class="total-price">₹{{ order.total_amount }}</span>
+                        <form method="post" action="/order_details">
+                            {%csrf_token%}
+                        <input type="hidden" value="{{order.id}}" name="order_id">
+                        <a href="{% url 'order_details'  %}" style="text-decoration:none;"><button type="submit" class="view-btn" style="cursor:pointer">View Details</button></a> 
+                        </form>      
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+        {% else %}
+            <div class="empty-state">
+                <i class="fas fa-box-open"></i>
+                <p>You haven't placed any orders yet.</p>
+                <a href="/" style="color: #ff6b81;">Start Shopping</a>
+            </div>
+        {% endif %}
+
+    </div>
+
+</body>
+</html>

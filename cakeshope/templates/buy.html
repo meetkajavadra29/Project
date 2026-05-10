@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout | SweetDelights</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+    <style>
+        /* --- Reset & Theme --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: #fdf2f5; color: #444; }
+
+        .container {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 0 20px;
+            display: flex;
+            gap: 30px;
+        }
+
+        h2 { font-family: 'Pacifico', cursive; color: #ff6b81; margin-bottom: 20px; }
+        h3 { font-size: 18px; color: #333; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+
+        /* --- LEFT COLUMN: FORMS --- */
+        .checkout-form {
+            flex: 2;
+            background: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .input-group { margin-bottom: 15px; }
+        .input-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px; color: #555; }
+        
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: 0.3s;
+            outline: none;
+        }
+
+        .input-group input:focus { border-color: #ff6b81; box-shadow: 0 0 5px rgba(255, 107, 129, 0.2); }
+
+        .row { display: flex; gap: 20px; }
+        .col { flex: 1; }
+
+        /* NEW: Payment Options Styling */
+        .payment-options {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .payment-option {
+            flex: 1;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Hide actual radio input but keep functionality */
+        .payment-option input[type="radio"] {
+            width: auto;
+            accent-color: #ff6b81;
+        }
+
+        .payment-option:hover { border-color: #ff6b81; }
+        .payment-option.selected { border-color: #ff6b81; background-color: #fff0f3; }
+
+        /* Payment Icons */
+        .payment-icons { margin-bottom: 15px; font-size: 24px; color: #555; display: flex; gap: 10px; }
+        .payment-icons i { transition: 0.3s; }
+        .payment-icons i:hover { color: #ff6b81; }
+
+        /* Card Details Wrapper (to hide/show) */
+        #card-details-wrapper {
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        /* --- RIGHT COLUMN: SUMMARY --- */
+        .order-summary {
+            flex: 1;
+            background: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            height: fit-content;
+        }
+
+        .summary-item { display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 14px; }
+        .summary-item.total { border-top: 2px dashed #eee; padding-top: 15px; font-weight: 600; font-size: 18px; color: #333; }
+        .item-name { color: #666; }
+        .item-price { font-weight: 600; color: #333; }
+
+        .btn-place-order {
+            width: 100%;
+            padding: 15px;
+            background: #ff6b81;
+            color: #fff;
+            border: none;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 20px;
+        }
+
+        .btn-place-order:hover { background: #e0556a; transform: translateY(-2px); }
+
+        /* --- SUCCESS MODAL --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal {
+            background: #fff;
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            width: 400px;
+            animation: popIn 0.3s ease;
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .success-icon {
+            font-size: 60px;
+            color: #2ecc71;
+            margin-bottom: 20px;
+        }
+
+        .btn-home {
+            background: #333;
+            color: #fff;
+            padding: 10px 25px;
+            border-radius: 20px;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .container { flex-direction: column-reverse; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        
+        <div class="checkout-form">
+            <h2>Checkout</h2>
+            
+            <h3>1. Order Details</h3>
+            <form id="checkoutForm" method="post" action='/palce_order'>
+                {% csrf_token %}
+                <div class="input-group">
+                    <label>Full Name</label>
+                    <input type="text" placeholder="John Doe" value="{{request.user.last_name}} {{request.user.first_name}}" required>
+                </div>
+                <div class="row">
+                    <div class="col input-group">
+                        <label>Email</label>
+                        <input type="email" placeholder="john@example.com" value="{{request.user.email}}" required>
+                    </div>
+                    <div class="col input-group">
+                        <label>Phone</label>
+                        <input type="tel" placeholder="+1 234 567 890" value="{{request.user.u_mobile}}" required>
+                    </div>
+                </div>
+                
+                <h3 style="margin-top: 30px;">2. Payment Method</h3>
+                
+                <div class="payment-options">
+                    <label class="payment-option selected" id="opt-online" onclick="selectPayment('online')">
+                        <input type="radio" name="payment_method" value="online" checked>
+                        <span><i class="fas fa-credit-card"></i> Online Payment</span>
+                    </label>
+                    
+                    <label class="payment-option" id="opt-cod" onclick="selectPayment('cod')">
+                        <input type="radio" name="payment_method" value="cod">
+                        <span><i class="fas fa-money-bill-wave"></i> Cash on Delivery</span>
+                    </label>
+                </div>
+
+                <div id="card-details-wrapper">
+                    {% comment %} <div class="payment-icons">
+                        <i class="fab fa-cc-visa"></i>
+                        <i class="fab fa-cc-mastercard"></i>
+                        <i class="fab fa-cc-amex"></i>
+                        <i class="fab fa-cc-paypal"></i>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Card Number</label>
+                        <input type="text" placeholder="0000 0000 0000 0000" maxlength="19" name="transation_id">
+                    </div>
+                    <div class="row">
+                        <div class="col input-group">
+                            <label>Expiry Date</label>
+                            <input type="text" placeholder="MM/YY" maxlength="5">
+                        </div>
+                        <div class="col input-group">
+                            <label>CVV</label>
+                            <input type="password" placeholder="123" maxlength="3">
+                        </div>
+                    </div> {% endcomment %}
+                </div>
+                {%if item%}
+                {%for prod in item%}
+                <input type="hidden" value="{{prod.id}}" name="cart" />
+                {%endfor%}
+                {%elif prod%}
+                <input type="hidden" value="{{prod.id}}" name="product_id" />
+                <input type="hidden" value="{{qty}}" name="qty"/>
+                {%endif%}
+                <input type="hidden" value="{{total}}" name="total"/>
+                <button type="submit" class="btn-place-order" id="payBtn">Place Order</button>
+            </form>
+        </div>
+
+        <div class="order-summary">
+            <h3>Order Summary</h3>
+            {%if item%}
+            {%for prod in item%}
+            <div class="summary-item">
+                <span class="item-name">{{prod.quantity}}x {{prod.product.p_name}}</span>
+                <span class="item-price">₹{{prod.product.p_price}}</span>
+            </div>
+            {%endfor%}
+            {% elif prod %}
+            <div class="summary-item">
+                <span class="item-name">{{qty}}x {{prod.p_name}}</span>
+                <span class="item-price">₹{{prod.p_price}}</span>
+            </div>
+            {%endif%}
+            <div class="summary-item">
+                <span class="item-name">Tax (5%)</span>
+                <span class="item-price">₹{{tax}}</span>
+            </div>
+
+            <div class="summary-item total">
+                <span>Total</span>
+                <span style="color:#ff6b81">₹{{total}}</span>
+            </div>
+            
+            <p style="font-size:12px; color:#777; margin-top:15px; text-align:center;">
+                <i class="fas fa-lock"></i> Secure Checkout
+            </p>
+        </div>
+
+    </div>
+
+    
+    <script>
+        const form = document.getElementById('checkoutForm');
+        const payBtn = document.getElementById('payBtn');
+
+        // NEW: Function to Toggle Payment Display
+        function selectPayment(type) {
+            const wrapper = document.getElementById('card-details-wrapper');
+            const onlineOpt = document.getElementById('opt-online');
+            const codOpt = document.getElementById('opt-cod');
+            
+            if(type === 'online') {
+                // Show Card Details
+                wrapper.style.display = 'block';
+                // Update styles
+                onlineOpt.classList.add('selected');
+                codOpt.classList.remove('selected');
+                
+            } else {
+                // Hide Card Details
+                wrapper.style.display = 'none';
+                // Update styles
+                codOpt.classList.add('selected');
+                onlineOpt.classList.remove('selected');
+            }
+        }
+
+        {% comment %} form.addEventListener('submit', (e) => {
+            e.preventDefault(); 
+            
+            payBtn.innerText = "Processing...";
+            payBtn.style.opacity = "0.7";
+            
+            setTimeout(() => {
+                payBtn.innerText = "Place Order"; 
+                payBtn.style.opacity = "1";
+                payBtn.click= form.submit();
+
+            }, 2000);
+        }); {% endcomment %}
+        var options = {
+            "key": "{{ key_id }}", 
+            "amount": "{{ amount }}",
+            "currency": "INR",
+            "name": "My Django Shop",
+            "description": "Test Transaction",
+            "order_id": "{{ order.id }}",
+            "handler": function (response){
+                window.location.href = "/order_succes?oid="+"{{order1}}"+"&method="+"{{method}}";
+            },
+            "theme": {
+                "color": "#3399cc"
+            }
+           };
+           var rzp1 = new Razorpay(options);
+           rzp1.open(); 
+            {% comment %} document.getElementById('payBtn').onclick = function (e) {
+                form.submit();
+           rzp1.open();
+           e.preventDefault();
+           }  {% endcomment %}
+    
+    </script>
+
+</body>
+</html>

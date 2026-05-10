@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Order #{{ order.id }} Details | SweetDelights</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        /* --- Theme Reset --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: #fdf2f5; color: #444; padding-bottom: 50px; }
+
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        /* --- Header & Title --- */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-title {
+            font-family: 'Pacifico', cursive;
+            color: #ff6b81;
+            font-size: 32px;
+        }
+
+        .btn-back {
+            text-decoration: none;
+            color: #555;
+            background: #fff;
+            padding: 10px 20px;
+            border-radius: 30px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: 0.3s;
+            font-size: 14px;
+        }
+        .btn-back:hover { background: #eee; }
+
+        /* --- Info Cards (Grid) --- */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .card h3 {
+            font-size: 16px;
+            color: #333;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+        .info-label { color: #888; }
+        .info-val { font-weight: 600; color: #555; }
+
+        /* Status Badge */
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .status-badge.False { background: #fff3cd; color: #856404; }
+        .status-badge.processing { background: #cce5ff; color: #004085; }
+        .status-badge.True { background: #d4edda; color: #155724; }
+        .status-badge.cancelled { background: #f8d7da; color: #721c24; }
+
+        /* --- Items Table --- */
+        .items-section {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            padding: 25px;
+        }
+
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; color: #888; font-size: 13px; font-weight: 600; padding-bottom: 15px; border-bottom: 1px solid #eee; }
+        td { padding: 15px 0; border-bottom: 1px solid #f9f9f9; vertical-align: middle; }
+
+        .product-col { display: flex; align-items: center; gap: 15px; }
+        .product-img { width: 60px; height: 60px; border-radius: 8px; object-fit: cover; border: 1px solid #eee; }
+        .product-name { font-weight: 600; color: #333; display: block; }
+        .product-cat { font-size: 12px; color: #999; }
+
+        /* --- Price Summary --- */
+        .summary-section {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+        
+        .summary-box {
+            width: 300px;
+            text-align: right;
+        }
+
+        .sum-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; color: #666; }
+        .sum-row.total { 
+            border-top: 2px dashed #eee; 
+            padding-top: 15px; 
+            margin-top: 10px; 
+            font-size: 20px; 
+            font-weight: 700; 
+            color: #ff6b81; 
+        }
+
+        @media (max-width: 600px) {
+            .page-header { flex-direction: column; gap: 15px; align-items: flex-start; }
+            .info-grid { grid-template-columns: 1fr; }
+            th:nth-child(2), td:nth-child(2) { display: none; } /* Hide Category on mobile */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">Order Details</h1>
+            <a href="{% url 'order' %}" class="btn-back"><i class="fas fa-arrow-left"></i> Back to Orders</a>
+        </div>
+
+        <div class="info-grid">
+            
+            <div class="card">
+                <h3>Order Information</h3>
+                <div class="info-row">
+                    <span class="info-label">Order ID:</span>
+                    <span class="info-val">#{{ order.id }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Date Placed:</span>
+                    <span class="info-val">{{ order.o_date|date:"M d, Y" }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Status:</span>
+                    {%if order.o_status%}
+                    <span class="status-badge {{ order.o_status }}">Done</span>
+                    {%else%}
+                    <span class="status-badge {{ order.o_status }}">preparing</span>
+                    {%endif%}
+
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Payment:</span>
+                    <span class="info-val" style="text-transform: uppercase;">{{ payment.payment_type }}</span>
+                </div>
+            </div>
+
+            {% comment %} <div class="card">
+                <h3>Shipping To</h3>
+                <div class="info-row">
+                    <span class="info-label">Name:</span>
+                    <span class="info-val">{{ request.user.first_name }} {{ request.user.last_name }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Email:</span>
+                    <span class="info-val">{{ request.user.email }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Address:</span>
+                    <span class="info-val">{{ order.address|default:"123 Sweet St, Cake City" }}</span>
+                </div>
+            </div> {% endcomment %}
+
+        </div>
+
+        <div class="items-section">
+            <h3>Items Ordered</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th width="50%">Product</th>
+                        <th width="15%">Price</th>
+                        <th width="15%">Quantity</th>
+                        <th width="20%" style="text-align: right;">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items %}
+                    <tr>
+                        <td>
+                            <div class="product-col">
+                                <img src="{{ item.product_id.p_img.url }}" alt="Cake" class="product-img">
+                                <div style="line-height:18px;">
+                                    <span class="product-name">{{ item.product_id.p_name }}</span>
+                                    <span class="product-cat">{{ item.product_id.category.category_name }}</span>
+                                    {%if order.o_status%}
+                                    {% comment %} <form method="get" action="/feedback">
+                                        <input type="hidden" value="{{item.product_id.id}}" name="product_id"/>
+                                        <button type="submit" style="font-size:12px; border:none; background:none;color:#999;">Give Review</button>
+                                    </form> {% endcomment %}
+                                    {%if item.product_id.id not in feedback_product_id%}
+                                    <p><a href="{% url 'feedback' item.product_id.id%}" style="font-size:12px; border:none; background:none;color:#999;text-decoration:none;">Give Review</a></P>
+                                    {%else%}
+                                    <p><a href="{% url 'edit_feedback' item.product_id.id%}" style="font-size:12px; border:none; background:none;color:#999;text-decoration:none;">Edit Feedback</a></P>
+                                    {%endif%}
+                                    {%endif%}
+                                </div>
+                            </div>
+                        </td>
+                        <td>₹{{ item.product_id.p_price }}</td>
+                        <td>x {{ item.quantity }}</td>
+                        <td style="text-align: right; font-weight: 600;">
+                            ₹{% widthratio item.product_id.p_price 1 item.quantity %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <div class="summary-section">
+                <div class="summary-box">
+                    <div class="sum-row">
+                        <span>Subtotal</span>
+                        <span>₹{{ subtotal }}</span>
+                    </div>
+                    <div class="sum-row">
+                        <span>Tax (5%)</span>
+                        <span>₹{{ tax }}</span>
+                    </div>
+                    <div class="sum-row total">
+                        <span>Grand Total</span>
+                        <span>₹{{ order.total_amount }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

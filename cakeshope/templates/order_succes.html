@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmed | SweetDelights</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { 
+            background-color: #fdf2f5; 
+            color: #444; 
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .success-card {
+            background: #fff;
+            max-width: 500px;
+            width: 100%;
+            padding: 50px 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            text-align: center;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Animated Checkmark */
+        .check-container {
+            width: 80px;
+            height: 80px;
+            background: #e8f5e9;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+        }
+
+        .check-icon {
+            font-size: 40px;
+            color: #2ecc71;
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.3s forwards;
+            opacity: 0;
+            transform: scale(0.5);
+        }
+
+        @keyframes popIn {
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        h1 {
+            font-family: 'Pacifico', cursive;
+            color: #ff6b81;
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .order-details {
+            background: #f9f9f9;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .detail-row.total {
+            border-top: 1px dashed #ddd;
+            padding-top: 10px;
+            margin-top: 10px;
+            font-weight: 600;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: 0.3s;
+            flex: 1;
+        }
+
+        .btn-primary {
+            background: #ff6b81;
+            color: #fff;
+            box-shadow: 0 4px 10px rgba(255, 107, 129, 0.3);
+        }
+        .btn-primary:hover { background: #e0556a; transform: translateY(-2px); }
+
+        .btn-secondary {
+            background: #eee;
+            color: #555;
+        }
+        .btn-secondary:hover { background: #ddd; }
+
+        @media (max-width: 480px) {
+            .btn-group { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="success-card">
+        <div class="check-container">
+            <i class="fas fa-check check-icon"></i>
+        </div>
+
+        <h1>Thank You!</h1>
+        <p>Your order has been placed successfully.<br>We are preparing your sweet delights.</p>
+
+        <div class="order-details">
+            <div class="detail-row">
+                <span>Order ID:</span>
+                <strong>#{{ order1.id }}</strong>
+            </div>
+            <div class="detail-row">
+                <span>Date:</span>
+                <span>{{ order1.o_date|date:"M d, Y" }}</span>
+            </div>
+            <div class="detail-row">
+                <span>Payment Method:</span>
+                <span style="text-transform: capitalize;">{{ method }}</span>
+            </div>
+            <div class="detail-row total">
+                <span>Total Amount:</span>
+                <span style="color: #ff6b81;">₹{{ order1.total_amount }}</span>
+            </div>
+        </div>
+
+        <div class="btn-group">
+            <a href="{% url 'order' %}" class="btn btn-secondary">Track Order</a>
+            <a href="{% url 'home' %}" class="btn btn-primary">Continue Shopping</a>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Share Your Feedback | SweetDelights</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        /* --- Theme Reset --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { 
+            background-color: #fdf2f5; 
+            color: #444; 
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .feedback-container {
+            background: #fff;
+            width: 100%;
+            max-width: 800px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            overflow: hidden;
+            display: flex;
+        }
+
+        /* Left Side: Visual/Text */
+        .feedback-info {
+            flex: 1;
+            background: linear-gradient(135deg, #ff6b81, #ff8e9e);
+            color: #fff;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .feedback-info h2 {
+            font-family: 'Pacifico', cursive;
+            font-size: 32px;
+            margin-bottom: 15px;
+        }
+
+        .feedback-info p {
+            font-size: 14px;
+            opacity: 0.9;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .feedback-img {
+            width: 150px;
+            height: 150px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+        }
+
+        /* Right Side: Form */
+        .feedback-form {
+            flex: 1.2;
+            padding: 40px;
+            
+        }
+
+        .form-group { margin-bottom: 20px; }
+        
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 8px;
+        }
+
+        .form-group input, 
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #eee;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: 0.3s;
+            outline: none;
+            resize: none; /* Disables resizing for textarea */
+        }
+
+        .form-group input:focus, 
+        .form-group textarea:focus {
+            border-color: #ff6b81;
+        }
+
+        /* --- Star Rating Widget --- */
+        .rating-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .star {
+            font-size: 24px;
+            color: #ddd; /* Empty star color */
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .star.hovered,
+        .star.selected {
+            color: #f1c40f; /* Gold color */
+        }
+
+        /* Submit Button */
+        .btn-submit {
+            background: #333;
+            color: #fff;
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-submit:hover {
+            background: #ff6b81;
+            transform: translateY(-2px);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .feedback-container { flex-direction: column; }
+            .feedback-info { padding: 30px; }
+            .feedback-form { padding: 30px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="feedback-container">
+        <div class="feedback-info">
+            <div class="feedback-img">
+                <i class="fas fa-heart"></i>
+            </div>
+            <h2>We Value Your Opinion</h2>
+            <p>Did you enjoy our cakes? How was the service? Your feedback helps us bake better memories for everyone!</p>
+        </div>
+
+        <div class="feedback-form">
+            <form  method="POST" id="feedbackForm" style="width:100%;height:100%;display:flex;flex-direction:column;justify-content:space-between;">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label>How would you rate your experience?</label>
+                    <div class="rating-box" id="ratingContainer">
+                        <i class="fas fa-star star" data-value="1"></i>
+                        <i class="fas fa-star star" data-value="2"></i>
+                        <i class="fas fa-star star" data-value="3"></i>
+                        <i class="fas fa-star star" data-value="4"></i>
+                        <i class="fas fa-star star" data-value="5"></i>
+                    </div>
+                    <input type="hidden" name="rating" id="ratingValue" required>
+                    <small id="ratingError" style="color:red; display:none; font-size:12px;">Please select a rating</small>
+                </div>
+
+                {% comment %} <div class="form-group">
+                    <label>Review Title</label>
+                    <input type="text" name="subject" placeholder="E.g. Best Chocolate Cake ever!">
+                </div> {% endcomment %}
+
+                <div class="form-group">
+                    <label>Your Feedback</label>
+                    <textarea name="message" rows="4"  placeholder="Tell us about your experience..." required>{% if feedback %}{{feedback.feedback_details}}{%endif%}</textarea>
+                </div>
+
+                <button type="submit" class="btn-submit">Submit Review</button>
+            </form>
+        </div>
+
+    </div>
+
+    <script>
+        const stars = document.querySelectorAll('.star');
+        const ratingInput = document.getElementById('ratingValue');
+        const form = document.getElementById('feedbackForm');
+        const ratingError = document.getElementById('ratingError');
+
+        // 1. Handle Hover Effect
+        stars.forEach(star => {
+            star.addEventListener('mouseover', () => {
+                const value = parseInt(star.getAttribute('data-value'));
+                highlightStars(value);
+            });
+
+            star.addEventListener('mouseout', () => {
+                // Reset to selected value when mouse leaves
+                const selectedValue = parseInt(ratingInput.value) || 0;
+                highlightStars(selectedValue);
+            });
+
+            // 2. Handle Click (Selection)
+            star.addEventListener('click', () => {
+                const value = star.getAttribute('data-value');
+                ratingInput.value = value; // Store value in hidden input
+                highlightStars(value); // Keep stars lit
+                ratingError.style.display = 'none'; // Hide error if visible
+            });
+            {%if feedback %}
+            highlightStars({{feedback.feedback_star}});
+            ratingInput.value = {{feedback.feedback_star}};
+            {%endif%}
+        });
+
+        // Function to color stars up to a certain index
+        function highlightStars(count) {
+            stars.forEach(star => {
+                const starVal = parseInt(star.getAttribute('data-value'));
+                if (starVal <= count) {
+                    star.classList.add('selected');
+                    // Ensure it looks solid
+                    star.style.color = "#f1c40f"; 
+                } else {
+                    star.classList.remove('selected');
+                    // Reset to empty color
+                    star.style.color = "#ddd";
+                }
+            });
+        }
+
+        // 3. Simple Validation on Submit
+        form.addEventListener('submit', (e) => {
+            if(!ratingInput.value) {
+                e.preventDefault(); // Stop submission
+                ratingError.style.display = 'block'; // Show error
+            } else {
+                // alert("Thank you for your feedback!"); 
+                 e.target.submit(); // Uncomment to actually submit
+            }
+        });
+    </script>
+
+</body>
+</html>
