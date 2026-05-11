@@ -1,8 +1,14 @@
 {
+    "builds": [
+      {
+        "src": "cakeshope/wsgi.py",
+        "use": "@vercel/python"
+      }
+    ],
     "routes": [
       {
         "src": "/(.*)",
-        "dest": "your_project_name/wsgi.py"
+        "dest": "cakeshope/wsgi.py"
       }
     ]
   }
