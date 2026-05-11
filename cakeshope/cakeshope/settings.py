@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-6vz4=h$oju1e%!pi*yye5y307(%cg+zhf^@q!9p&%d6!cyujma
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['https://cakeshop-pi.vercel.app/','*']
 
 
 # Application definition
