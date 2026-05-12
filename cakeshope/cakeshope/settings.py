@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'cloudinary',
     'django.contrib.staticfiles',
 ]
 
@@ -138,3 +139,11 @@ STATICFILES_DIRS = [
 STATIC_ROOT=os.path.join(BASE_DIR,'staticfiles')
 RAZORPAY_KEY_ID="rzp_test_RTQIz97y5TkM1p"
 RAZORPAY_KEY_SECRET="ZeYyRu2kNttTTQewjVrAVYDe"
+
+CLOUDINARY_STORAGE={
+    'CLOUD_NAME':os.environ.get('CLOUDINARY_CLOUD_NAME'),
+    'API_KEY':os.environ.get('CLOUDINARY_API_KEY'),
+    'API_SECRET':os.environ.get('CLOUDINARY_API_SECRET')
+}
+
+DEFAULT_FILE_STORAGE='cloudinary_storage.storage.MediaCloudinaryStorage'
