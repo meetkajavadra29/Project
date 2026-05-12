@@ -41,8 +41,9 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'cloudinary',
+    'cloudinary_storage',
     'django.contrib.staticfiles',
+    'cloudinary'
 ]
 
 MIDDLEWARE = [
@@ -155,3 +156,4 @@ STORAGE={
     },
 }
 MEDIA_URL='/media/'
+MEDIA_ROOT=BASE_DIR/'media'
