@@ -172,7 +172,7 @@
                         {% for item in order_detalis %}
                         {%if item.o_id.id == order.id%}
                         <div style="display: flex; gap: 10px;">
-                            <img src="{{ item.product_id.p_img}}" alt="Cake" class="item-thumb">
+                            <img src="{{ item.product_id.p_img.url}}" alt="Cake" class="item-thumb">
                             <div class="item-text">
                                 <strong>{{ item.product_id.p_name }}</strong>
                                 <small>Qty: {{ item.quantity }}</small>
