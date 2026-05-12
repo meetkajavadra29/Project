@@ -3,8 +3,10 @@ blinker==1.9.0
 certifi==2025.11.12
 charset-normalizer==3.4.4
 click==8.2.1
+cloudinary==1.44.2
 dj-database-url==3.1.2
 Django==6.0
+django-cloudinary-storage==0.3.0
 django-grappelli==4.0.3
 django-jazzmin==3.0.1
 django-jet-reboot==1.3.10
@@ -16,10 +18,10 @@ MarkupSafe==3.0.2
 pillow==12.0.0
 psycopg2-binary==2.9.12
 pyjokes==0.8.3
-
 pyttsx3==2.99
 razorpay==2.0.0
 requests==2.32.5
+six==1.17.0
 sqlparse==0.5.4
 urllib3==2.6.2
 Werkzeug==3.1.3
