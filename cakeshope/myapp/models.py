@@ -11,23 +11,23 @@ class CustomeUser(AbstractUser):
         return self.username
     
 class Categories(models.Model):
-    category_name=models.CharField()
+    category_name=models.CharField(max_length=50)
     def __str__(self):
         return self.category_name
 
 class Flavour(models.Model):
-    flavour_name=models.CharField()
+    flavour_name=models.CharField(max_length=50)
     def __str__(self):
         return self.flavour_name
     
 class Product(models.Model):
     category=models.ForeignKey(Categories,on_delete=models.CASCADE)
     flavour=models.ForeignKey(Flavour,on_delete=models.CASCADE)
-    p_name=models.CharField()
+    p_name=models.CharField(max_length=50)
     p_weight=models.FloatField()
     p_price=models.FloatField()
     p_desc=models.TextField()
-    p_img=models.ImageField(upload_to='static')
+    p_img=models.ImageField(upload_to='products/')
     def __str__(self):
         return str(self.id)
    
@@ -53,10 +53,10 @@ class Order_details(models.Model):
 class Payment(models.Model):
     u_id=models.ForeignKey(CustomeUser,on_delete=models.CASCADE)
     o_id=models.ForeignKey(Order,on_delete=models.CASCADE)
-    payment_type=models.CharField()
-    transition_id=models.CharField(null=True)
+    payment_type=models.CharField(max_length=10)
+    transition_id=models.CharField(null=True,max_length=50)
     payment_date=models.DateField(auto_now_add=True)
-    payment_status=models.CharField()
+    payment_status=models.CharField(max_length=10)
     payment_amount=models.FloatField()
 
 class Feedback(models.Model):
@@ -68,9 +68,9 @@ class Feedback(models.Model):
 
 class Gallery(models.Model):
     product_id=models.ForeignKey(Product,on_delete=models.CASCADE,unique=True)
-    img_p1=models.ImageField(upload_to='static/Gallery1')
-    img_p2=models.ImageField(upload_to='static/Gallery2')
-    img_p3=models.ImageField(upload_to='static/Gallery3')
+    img_p1=models.ImageField(upload_to='product_gallery/img1/')
+    img_p2=models.ImageField(upload_to='product_gallery/img2/')
+    img_p3=models.ImageField(upload_to='product_gallery/img3/')
 
 class Cart(models.Model):
     user=models.ForeignKey(CustomeUser,on_delete=models.CASCADE)
