@@ -26,17 +26,23 @@
     /* --- Header Section --- */
     .menu-header {
         text-align: center;
-        padding: 40px 20px 20px;
+        /* CRITICAL FIX: Large top padding to clear the base.html top navigation bar */
+        padding: 140px 20px 40px; 
         width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 
     .menu-header h1 {
         font-family: 'Pacifico', cursive;
         color: #ff6b81;
-        /* Fluid typography: scales automatically */
-        font-size: clamp(32px, 5vw, 48px);
-        margin-bottom: 10px;
-        line-height: 1.2;
+        /* Fluid typography: scales automatically without breaking */
+        font-size: clamp(36px, 6vw, 60px); 
+        margin-bottom: 15px;
+        line-height: 1.4; /* Prevents the text from cutting off vertically */
+        word-wrap: break-word;
+        max-width: 100%;
     }
 
     .menu-header p {
@@ -44,35 +50,8 @@
         max-width: 600px;
         margin: 0 auto;
         font-size: clamp(14px, 2.5vw, 16px);
-    }
-
-    /* --- Filter Buttons (Visual Only) --- */
-    .filter-container {
-        display: flex;
-        justify-content: center;
-        gap: 15px;
-        padding: 20px;
-        flex-wrap: wrap;
-        margin-bottom: 30px;
-        width: 100%;
-    }
-
-    .filter-btn-visual {
-        background: #fff;
-        border: 2px solid #ff6b81;
-        color: #ff6b81;
-        padding: 8px 25px;
-        border-radius: 25px;
-        cursor: pointer;
-        font-weight: 600;
-        transition: 0.3s;
-        font-size: clamp(12px, 2vw, 14px);
-    }
-
-    .filter-btn-visual:hover,
-    .filter-btn-visual.active {
-        background: #ff6b81;
-        color: white;
+        padding: 0 10px;
+        line-height: 1.6;
     }
 
     /* --- Responsive Grid Layout --- */
@@ -85,9 +64,8 @@
 
     .product-grid {
         display: grid;
-        /* Adaptable grid that prevents overflow and scales smoothly */
         grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 25px;
+        gap: 30px;
         width: 100%;
     } 
 
@@ -101,7 +79,7 @@
         width: 100%;
         display: flex;
         flex-direction: column;
-        height: 100%; /* Ensures cards in the same row are equal height */
+        height: 100%;
     }
 
     .product-card:hover {
@@ -110,7 +88,7 @@
     }
 
     .image-box {
-        height: 220px;
+        height: 240px;
         width: 100%;
         overflow: hidden;
         position: relative;
@@ -154,10 +132,11 @@
     }
 
     .product-title {
-        font-size: clamp(18px, 4vw, 20px);
+        font-size: clamp(18px, 4vw, 22px);
         color: #333;
         margin: 5px 0 10px;
         font-weight: 600;
+        line-height: 1.3;
     }
 
     .price {
@@ -173,7 +152,7 @@
         display: flex;
         gap: 10px;
         justify-content: center;
-        margin-top: auto; /* Forces buttons to stick to the bottom of the card */
+        margin-top: auto; 
         width: 100%;
     }
 
@@ -211,20 +190,20 @@
         background-color: #e0556a;
     }
 
-    /* --- Filter Button (Fixed on Desktop, Flow on Mobile) --- */
+    /* --- Filter Button --- */
     .filter-btn {
         position: fixed;
-        top: 150px; /* Lowered slightly to avoid header overlap on desktop */
+        top: 150px; 
         right: 0;
         background-color: #ff6b81;
         color: #fff;
         border: none;
-        padding: 10px 20px 10px 15px;
+        padding: 12px 25px 12px 20px;
         border-radius: 30px 0 0 30px; 
         font-size: 16px;
         font-weight: 600;
         cursor: pointer;
-        box-shadow: -2px 2px 10px rgba(0,0,0,0.1);
+        box-shadow: -2px 2px 10px rgba(0,0,0,0.15);
         z-index: 999; 
         transition: 0.3s;
         display: flex;
@@ -233,7 +212,7 @@
     }
 
     .filter-btn:hover {
-        padding-right: 30px; 
+        padding-right: 35px; 
         background-color: #e0556a;
     }
 
@@ -360,24 +339,26 @@
     }
 
     /* --- Advanced Mobile Responsiveness Adjustments --- */
-    @media (max-width: 768px) {
+    @media (max-width: 900px) {
         .menu-header {
-            padding: 20px 15px;
+            padding: 120px 15px 30px; /* Still maintains clearance for navbar */
         }
 
         .filter-btn {
-            /* On mobile, un-fix the button so it sits neatly at the top of the grid */
+            /* Fixes overlap: Changes filter to a normal centered button on smaller screens */
             position: relative;
             top: 0;
-            width: 100%;
-            border-radius: 8px;
-            margin-bottom: 20px;
+            right: 0;
+            display: flex;
             justify-content: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            width: max-content;
+            margin: 0 auto 30px auto;
+            border-radius: 30px;
+            padding: 10px 30px;
         }
 
         .product-grid {
-            gap: 15px;
+            gap: 20px;
         }
         
         .pagination-container {
