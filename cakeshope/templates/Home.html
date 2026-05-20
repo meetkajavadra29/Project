@@ -13,10 +13,12 @@
         font-family: 'Poppins', sans-serif;
     }
 
-    body {
+    /* Prevent horizontal scrolling on mobile/tablet */
+    html, body {
         background-color: #fdf2f5;
         color: #444;
-        overflow-x: hidden; /* Prevents accidental horizontal scrolling */
+        overflow-x: hidden; 
+        width: 100%;
     }
 
     a {
@@ -26,20 +28,24 @@
     /* --- Header Section --- */
     .menu-header {
         text-align: center;
-        padding: 50px 20px 30px;
+        padding: 80px 20px 30px; /* Increased top padding to clear navbar */
+        position: relative;
     }
 
     .menu-header h1 {
         font-family: 'Pacifico', cursive;
         color: #ff6b81;
-        font-size: 48px;
+        /* Fluid typography: scales automatically between 32px and 55px */
+        font-size: clamp(32px, 5vw, 55px); 
         margin-bottom: 10px;
+        line-height: 1.2;
     }
 
     .menu-header p {
         color: #777;
         max-width: 600px;
         margin: 0 auto;
+        font-size: clamp(14px, 2vw, 16px);
     }
 
     /* --- Filter Buttons (Visual Only) --- */
@@ -79,8 +85,7 @@
 
     .product-grid {
         display: grid;
-        /* Adjusted to 250px for better fit on small mobile screens */
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
         gap: 30px;
         place-items: center;
     } 
@@ -91,10 +96,9 @@
         border-radius: 15px;
         overflow: hidden;
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-        {% comment %} position: relative; {% endcomment %}
         transition: box-shadow 0.3s ease;
         
-        /* Changed to percentages and max-width for responsiveness */
+        /* Removed fixed widths to prevent overflow on mobile/tablet */
         width: 100%;
         max-width: 350px; 
         margin: 0 auto;
@@ -160,26 +164,36 @@
         display: block;
     }
 
-    /* --- Buttons --- */
+    /* --- Buttons (Tablet Fixes Included) --- */
     .btn-group {
         display: flex;
         gap: 10px;
-        justify-content: center;
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    /* Force both the link and the form to take exactly half the space */
+    .btn-group > a, 
+    .btn-group > form {
+        flex: 1; 
+        display: flex;
+        min-width: 0; /* Prevents flex items from overflowing */
     }
 
     .btn {
+        width: 100%;
         border: none;
-        padding: 12px 15px;
+        padding: 10px 5px; /* Slightly reduced padding to fit smaller screens */
         border-radius: 5px;
         font-size: 14px;
         font-weight: 600;
         cursor: pointer;
         transition: 0.3s;
-        flex: 1;
         display: flex;
         align-items: center;
         justify-content: center;
         gap: 5px;
+        white-space: nowrap; /* CRITICAL: Stops text from breaking into two lines */
     }
 
     .btn-cart {
@@ -200,35 +214,49 @@
         background-color: #e0556a;
     }
 
+    /* --- Overriding Inline Styles for Pagination Layout --- */
+    div[style*="100vw"] {
+        width: 100% !important; /* Forces 100vw to behave, removing horizontal scroll */
+        justify-content: center !important;
+    }
+
+    div[style*="100vw"] > div {
+        margin-right: 0 !important;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+
+    .pagination {
+        margin: 40px auto 0 auto !important;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
     /* --- Mobile Responsiveness Adjustments --- */
     @media (max-width: 600px) {
-        .menu-header h1 {
-            font-size: 32px; /* Slightly smaller for mobile */
-        }
-
         .filter-container {
             gap: 10px;
+        }
+
+        .filter-btn {
+            padding: 6px 15px;
+            font-size: 14px;
         }
 
         .product-grid {
             grid-template-columns: 1fr;
         }
         
-        /* Adjust Pagination on mobile */
-        .pagination-container {
-            justify-content: center !important;
-            padding-right: 0 !important;
-        }
-        
-        .pagination {
-            margin: 20px 0 0 0 !important;
+        .filter-sidebar {
+            width: 85vw; /* Stops sidebar from being too wide on small phones */
         }
     }
 
     /* --- Filter Button (Fixed on Screen) --- */
     .filter-btn {
         position: fixed;
-        top: 100px; 
+        top: 130px; /* Pushed down to clear header text/navbar */
         right: 0;
         background-color: #ff6b81;
         color: #fff;
@@ -255,7 +283,6 @@
     .filter-sidebar {
         height: 100%;
         width: 300px;
-        max-width: 80vw; /* Ensures it doesn't overflow small screens */
         position: fixed;
         z-index: 1000;
         top: 0;
@@ -361,6 +388,9 @@
         opacity: 1;
     }
 </style>
+</head>
+
+<body>
 
     <div class="menu-header">
         <h1>Our Delicious Menu</h1>
@@ -383,21 +413,20 @@
             <div class="sidebar-section">
                 <b><h3>Flavour</h3></b>
                 <label for="all"><input type='checkbox' id="all" class="sidebar-option" value="Allflaver" name="flavour" checked><b style="margin-left:10px;">All cake</b></label><br>
-                {% if flavour %}
-                {% for flav in flavour %}
+                {% if flavour%}
+                {%for flav in flavour%}
                 <label for="{{flav.flavour_name}}"><input type='checkbox' id="{{flav.flavour_name}}" name="flavour" class="sidebar-option" value="{{flav.flavour_name}}"><b style="margin-left:10px;">{{flav.flavour_name}}</b></label><br>
-                {% endfor %}
-                {% endif %}
+                 {%endfor%}
+                {%endif%}
             </div>
-            
             <div class="sidebar-section">
                 <b><h3>Category</h3></b>
                 <label for="Allcategory"><input type='checkbox' id="Allcategory" class="sidebar-option" value="Allcategory" name="category" checked><b style="margin-left:10px;">All cake</b></label><br>
-                {% if categories %}
-                {% for category in categories %}
+                {% if categories%}
+                {%for category in categories%}
                 <label for="{{category.category_name}}"><input type='checkbox' id="{{category.category_name}}" name="category" class="sidebar-option" value="{{category.category_name}}"><b style="margin-left:10px;">{{category.category_name}}</b></label><br>
-                {% endfor %}
-                {% endif %}
+                 {%endfor%}
+                {%endif%}
             </div>
         
             <div class="sidebar-section">
@@ -406,10 +435,10 @@
                 <label for="100-200"><input type='checkbox' id="100-200" class="sidebar-option" value="Below_200" name="price"><b style="margin-left:10px;">₹0-200</b></label><br>
                 <label for="200-300"><input type='checkbox' id="200-300" class="sidebar-option" value="Below_300" name="price"><b style="margin-left:10px;">Below ₹300</b></label><br>
                 <label for="300-400"><input type='checkbox' id="300-400" class="sidebar-option" value="Below_400" name="price"><b style="margin-left:10px;">Below ₹400</b></label><br>
-                <label for="400+"><input type='checkbox' id="400+" class="sidebar-option" value="400_above" name="price"><b style="margin-left:10px;">₹400 above</b></label><br>
+                <label for="300+"><input type='checkbox' id="400+" class="sidebar-option" value="400_above" name="price"><b style="margin-left:10px;">₹400 above</b></label><br>
             </div>
         
-            <div style="padding: 0 30px; margin-bottom: 30px;">
+            <div style="padding: 0 30px;">
                 <button type="submit" class="apply-btn">
                     Apply Filters
                 </button>
@@ -418,8 +447,8 @@
         </form>
 
         <div class="product-grid">
-            {% if product %}
-            {% for prod in product %}
+            {%if product%}
+            {%for prod in product%}
             <div class="product-card">
                 <div class="image-box">
                     <img src="{{prod.p_img.url}}" alt="Strawberry Cake">
@@ -431,61 +460,63 @@
                     <span class="price">{{prod.p_price}}</span>
                     <div class="btn-group">
                         <a href="{% url 'cart' prod.id %}" class="btn btn-cart"><i class="fas fa-shopping-cart"></i> Cart</a>
-                        <form method="get" action="/product_details" style="flex: 1; display: flex;">
+                        <form method="get" action="/product_details">
                             <input type="hidden" value="{{prod.id}}" name="product"/>
-                            <button type="submit" class="btn btn-buy" style="width: 100%;"><i class="fas fa-bolt"></i> Buy Now</button>
+                            <button type="submit" class="btn btn-buy"><i class="fas fa-bolt"></i> Buy Now</button>
                         </form>
                     </div>
                 </div>
             </div>
-            {% endfor %}
-            {% else %}
+            {%endfor%}
+            {%else%}
             <h2 style="text-align: center; width: 100%; grid-column: 1 / -1;">Product not found</h2>
-            {% endif %}
+            {%endif%}
         </div>
-        
-        <!-- Changed width:100vw to width:100% to stop horizontal scroll -->
-        <div class="pagination-container" style="width:100%; display:flex; justify-content:flex-end; padding-right: 5%;">
-            <nav aria-label="Page navigation example">
-                <ul class="pagination" style="margin:40px 0 0 0;">
-                    {% if product.has_previous %}
+
+        <div style="width:100vw;display:flex;flex-direction:row-reverse;">
+            <div aria-label="Page navigation example" style="margin-right:5%;">
+                <ul class="pagination" style="margin:40px 40px 0 0;">
+                    {%if product.has_previous%}
                     <li class="page-item"><a class="page-link" href="?page={{product.previous_page_number}}">Previous</a>
                     </li>
-                    {% else %}
+                    {%else%}
                     <li class="page-item"><a class="page-link disabled">Previous</a></li>
-                    {% endif %}
+                    {%endif%}
                     
-                    {% with start=product.number|add:"-1" end=product.number|add:"1" %}
-                        {% for num in product.paginator.page_range %}
-                            {% if num >= start and num <= end %} 
-                                {% if num == product.number %} 
-                                <li class="page-item"><a class="page-link disabled">{{num}}</a></li>
-                                {% else %}
-                                <li class="page-item"><a class="page-link" href="?page={{num}}">{{num}}</a></li>
-                                {% endif %}
-                            {% endif %}
-                        {% endfor %}
+                    {%with start=product.number|add:"-1" end=product.number|add:"1"%}
+                        {% for num in product.paginator.page_range%}
+                            {%if num >= start and num <= end %} 
+                             {%if num == product.number%} 
+                             <li class="page-item"><a class="page-link disabled">{{num}}</a></li>
+                            {%else %}
+                            <li class="page-item"><a class="page-link" href="?page={{num}}">{{num}}</a></li>
+                             {%endif%}
+                            {%endif%}
+                        {%endfor%}
                     {% endwith %}
                     
-                    {% if product.has_next %}
+                    {%if product.has_next%}
                     <li class="page-item"><a class="page-link" href="?page={{product.next_page_number}}">Next</a></li>
-                    {% else %}
+                    {%else%}
                     <li class="page-item"><a class="page-link disabled">Next</a></li>
-                    {% endif %}
+                    {%endif%}
                 </ul>
-            </nav>
+            </div>
         </div>
     </div>
    
+</body>
 <script>
 function toggleFilterSidebar() {
     const sidebar = document.getElementById("filterSidebar");
     const overlay = document.getElementById("filterOverlay");
     
     if (sidebar.classList.contains('active')) {
+        // Close
         sidebar.classList.remove('active');
         overlay.classList.remove('active');
     } else {
+        // Open
         sidebar.classList.add('active');
         overlay.classList.add('active');
     }
