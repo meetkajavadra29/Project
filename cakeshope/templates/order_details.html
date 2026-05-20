@@ -207,15 +207,15 @@
                                 <div style="line-height:18px;">
                                     <span class="product-name">{{ item.product_id.p_name }}</span>
                                     <span class="product-cat">{{ item.product_id.category.category_name }}</span>
-                                    {%if order.o_status%}
+                                    {%if order.o_status %}
                                     {% comment %} <form method="get" action="/feedback">
                                         <input type="hidden" value="{{item.product_id.id}}" name="product_id"/>
                                         <button type="submit" style="font-size:12px; border:none; background:none;color:#999;">Give Review</button>
                                     </form> {% endcomment %}
                                     {%if item.product_id.id not in feedback_product_id%}
-                                    <p><a href="{% url 'feedback' item.product_id.id%}" style="font-size:12px; border:none; background:none;color:#999;text-decoration:none;">Give Review</a></P>
+                                    <p><a href="{% url 'feedback' item.product_id.id%}" style="font-size:12px; border:none; background:none;color:#007BFF;text-decoration:none;">Give Review</a></P>
                                     {%else%}
-                                    <p><a href="{% url 'edit_feedback' item.product_id.id%}" style="font-size:12px; border:none; background:none;color:#999;text-decoration:none;">Edit Feedback</a></P>
+                                    <p><a href="{% url 'edit_feedback' item.product_id.id%}" style="font-size:12px; border:none; background:none;color:##007BFF;text-decoration:none;">Edit Feedback</a></P>
                                     {%endif%}
                                     {%endif%}
                                 </div>
