@@ -158,7 +158,7 @@
                         <span class="order-id">#ORD-{{ order.id }}</span>
                         <span class="order-date">{{ order.o_date|date:"M d, Y" }}</span>
                     </div>
-                    {%if not order.o_status%}
+                    {%if order.o_status%}
                     <span class="status">Done</span>
                     {%else%}
                     <span class="status">preparing</span>
