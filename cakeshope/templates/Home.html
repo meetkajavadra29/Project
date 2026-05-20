@@ -26,8 +26,8 @@
     /* --- Header Section --- */
     .menu-header {
         text-align: center;
-        /* CRITICAL FIX: Large top padding to clear the base.html top navigation bar */
-        padding: 140px 20px 40px; 
+        /* FIXED: Normal padding, no more huge gap! */
+        padding: 40px 20px 20px; 
         width: 100%;
         display: flex;
         flex-direction: column;
@@ -37,10 +37,10 @@
     .menu-header h1 {
         font-family: 'Pacifico', cursive;
         color: #ff6b81;
-        /* Fluid typography: scales automatically without breaking */
-        font-size: clamp(36px, 6vw, 60px); 
-        margin-bottom: 15px;
-        line-height: 1.4; /* Prevents the text from cutting off vertically */
+        /* Fluid typography: scales perfectly */
+        font-size: clamp(32px, 7vw, 55px); 
+        margin-bottom: 10px;
+        line-height: 1.3; 
         word-wrap: break-word;
         max-width: 100%;
     }
@@ -49,9 +49,9 @@
         color: #777;
         max-width: 600px;
         margin: 0 auto;
-        font-size: clamp(14px, 2.5vw, 16px);
+        font-size: clamp(14px, 3vw, 16px);
         padding: 0 10px;
-        line-height: 1.6;
+        line-height: 1.5;
     }
 
     /* --- Responsive Grid Layout --- */
@@ -77,6 +77,8 @@
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
         transition: transform 0.3s ease, box-shadow 0.3s ease;
         width: 100%;
+        max-width: 400px;
+        margin: 0 auto;
         display: flex;
         flex-direction: column;
         height: 100%;
@@ -132,7 +134,7 @@
     }
 
     .product-title {
-        font-size: clamp(18px, 4vw, 22px);
+        font-size: clamp(18px, 5vw, 22px);
         color: #333;
         margin: 5px 0 10px;
         font-weight: 600;
@@ -158,7 +160,7 @@
 
     .btn {
         border: none;
-        padding: 12px 15px;
+        padding: 12px 10px;
         border-radius: 5px;
         font-size: 14px;
         font-weight: 600;
@@ -338,26 +340,32 @@
         margin: 0;
     }
 
-    /* --- Advanced Mobile Responsiveness Adjustments --- */
-    @media (max-width: 900px) {
+    /* --- Target specifically Mobile & 376px Width --- */
+    @media (max-width: 768px) {
         .menu-header {
-            padding: 120px 15px 30px; /* Still maintains clearance for navbar */
+            padding: 15px 15px 20px; /* Small, clean gap for mobile */
+        }
+
+        .container {
+            padding: 0 15px 60px; /* Adjust padding for small screens */
         }
 
         .filter-btn {
-            /* Fixes overlap: Changes filter to a normal centered button on smaller screens */
-            position: relative;
-            top: 0;
-            right: 0;
+            /* Remove the floating behavior completely on mobile */
+            position: static; 
             display: flex;
             justify-content: center;
-            width: max-content;
-            margin: 0 auto 30px auto;
+            width: 100%;
+            max-width: 250px;
+            margin: 0 auto 25px auto; /* Centers it perfectly above products */
             border-radius: 30px;
-            padding: 10px 30px;
+            padding: 10px 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
         .product-grid {
+            /* Forces exactly 1 column on phones like 376px width */
+            grid-template-columns: 1fr; 
             gap: 20px;
         }
         
