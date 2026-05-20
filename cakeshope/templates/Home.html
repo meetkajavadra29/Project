@@ -26,14 +26,14 @@
     /* --- Header Section --- */
     .menu-header {
         text-align: center;
-        padding: 50px 20px 30px;
+        padding: 40px 20px 20px;
         width: 100%;
     }
 
     .menu-header h1 {
         font-family: 'Pacifico', cursive;
         color: #ff6b81;
-        /* Fluid typography: scales automatically between 32px and 48px based on screen width */
+        /* Fluid typography: scales automatically */
         font-size: clamp(32px, 5vw, 48px);
         margin-bottom: 10px;
         line-height: 1.2;
@@ -44,7 +44,6 @@
         max-width: 600px;
         margin: 0 auto;
         font-size: clamp(14px, 2.5vw, 16px);
-        padding: 0 10px;
     }
 
     /* --- Filter Buttons (Visual Only) --- */
@@ -81,16 +80,14 @@
         width: 100%;
         max-width: 1200px;
         margin: auto;
-        padding: 0 15px 60px; /* Reduced horizontal padding for smaller screens */
-        overflow: hidden;
+        padding: 0 20px 60px;
     }
 
     .product-grid {
         display: grid;
-        /* min(100%, 250px) ensures that on devices smaller than 250px, it shrinks to 100% instead of overflowing */
-        grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+        /* Adaptable grid that prevents overflow and scales smoothly */
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
         gap: 25px;
-        place-items: center;
         width: 100%;
     } 
 
@@ -100,20 +97,20 @@
         border-radius: 15px;
         overflow: hidden;
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-        transition: box-shadow 0.3s ease;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
         width: 100%;
-        max-width: 350px; 
-        margin: 0 auto;
         display: flex;
         flex-direction: column;
+        height: 100%; /* Ensures cards in the same row are equal height */
     }
 
     .product-card:hover {
-        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
     }
 
     .image-box {
-        height: 250px;
+        height: 220px;
         width: 100%;
         overflow: hidden;
         position: relative;
@@ -144,7 +141,7 @@
         text-align: center;
         display: flex;
         flex-direction: column;
-        flex-grow: 1;
+        flex-grow: 1; /* Pushes content down properly */
     }
 
     .category-tag {
@@ -176,9 +173,8 @@
         display: flex;
         gap: 10px;
         justify-content: center;
-        margin-top: auto; /* Pushes buttons to the bottom of the card */
+        margin-top: auto; /* Forces buttons to stick to the bottom of the card */
         width: 100%;
-        flex-wrap: wrap; /* Prevents buttons from squishing too much on tiny screens */
     }
 
     .btn {
@@ -190,7 +186,6 @@
         cursor: pointer;
         transition: 0.3s;
         flex: 1;
-        min-width: 100px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -216,10 +211,10 @@
         background-color: #e0556a;
     }
 
-    /* --- Filter Button (Fixed on Screen) --- */
+    /* --- Filter Button (Fixed on Desktop, Flow on Mobile) --- */
     .filter-btn {
         position: fixed;
-        top: 100px; 
+        top: 150px; /* Lowered slightly to avoid header overlap on desktop */
         right: 0;
         background-color: #ff6b81;
         color: #fff;
@@ -246,14 +241,14 @@
     .filter-sidebar {
         height: 100%;
         width: 300px;
-        max-width: 85vw; /* Keeps sidebar usable on mobile without covering 100% */
+        max-width: 85vw;
         position: fixed;
         z-index: 1000;
         top: 0;
         left: -320px; 
         background-color: #fff;
         overflow-x: hidden;
-        overflow-y: auto; /* Allows scrolling inside sidebar */
+        overflow-y: auto; 
         transition: 0.4s ease;
         padding-top: 60px;
         padding-bottom: 30px;
@@ -354,47 +349,39 @@
         width: 100%; 
         display: flex; 
         justify-content: flex-end; 
-        padding-right: 5%;
+        margin-top: 40px;
     }
 
     .pagination {
-        margin: 40px 0 0 0;
         display: flex;
-        flex-wrap: wrap; /* Prevents overflow if pagination gets too long */
+        flex-wrap: wrap; 
         gap: 5px;
+        margin: 0;
     }
 
     /* --- Advanced Mobile Responsiveness Adjustments --- */
     @media (max-width: 768px) {
         .menu-header {
-            padding: 30px 15px 20px;
+            padding: 20px 15px;
         }
 
         .filter-btn {
-            /* Moves the filter button down on mobile so it doesn't cover the header */
-            top: auto;
-            bottom: 20px;
-            padding: 10px 15px;
-            font-size: 14px;
-            box-shadow: -2px -2px 10px rgba(0,0,0,0.15);
+            /* On mobile, un-fix the button so it sits neatly at the top of the grid */
+            position: relative;
+            top: 0;
+            width: 100%;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
         .product-grid {
             gap: 15px;
         }
-
-        .image-box {
-            height: 200px; /* Slightly smaller image on mobile */
-        }
         
         .pagination-container {
             justify-content: center;
-            padding-right: 0;
-        }
-        
-        .pagination {
-            justify-content: center;
-            margin: 20px 0 0 0;
         }
     }
 </style>
@@ -465,7 +452,7 @@
                     <span class="category-tag">{{prod.category}}</span>
                     <span class="category-tag">{{prod.flavour}}</span>
                     <h3 class="product-title">{{prod.p_name}}</h3>
-                    <span class="price">{{prod.p_price}}</span>
+                    <span class="price">₹{{prod.p_price}}</span>
                     <div class="btn-group">
                         <a href="{% url 'cart' prod.id %}" class="btn btn-cart"><i class="fas fa-shopping-cart"></i> Cart</a>
                         <form method="get" action="/product_details" style="flex: 1; display: flex; width: 100%;">
@@ -537,4 +524,4 @@ function toggleFilterSidebar() {
     integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
     crossorigin="anonymous"></script>
 
-{% endblock body %} 
+{% endblock body %}
