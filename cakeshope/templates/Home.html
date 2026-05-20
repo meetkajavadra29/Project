@@ -27,19 +27,24 @@
     .menu-header {
         text-align: center;
         padding: 50px 20px 30px;
+        width: 100%;
     }
 
     .menu-header h1 {
         font-family: 'Pacifico', cursive;
         color: #ff6b81;
-        font-size: 48px;
+        /* Fluid typography: scales automatically between 32px and 48px based on screen width */
+        font-size: clamp(32px, 5vw, 48px);
         margin-bottom: 10px;
+        line-height: 1.2;
     }
 
     .menu-header p {
         color: #777;
         max-width: 600px;
         margin: 0 auto;
+        font-size: clamp(14px, 2.5vw, 16px);
+        padding: 0 10px;
     }
 
     /* --- Filter Buttons (Visual Only) --- */
@@ -50,6 +55,7 @@
         padding: 20px;
         flex-wrap: wrap;
         margin-bottom: 30px;
+        width: 100%;
     }
 
     .filter-btn-visual {
@@ -61,6 +67,7 @@
         cursor: pointer;
         font-weight: 600;
         transition: 0.3s;
+        font-size: clamp(12px, 2vw, 14px);
     }
 
     .filter-btn-visual:hover,
@@ -71,18 +78,20 @@
 
     /* --- Responsive Grid Layout --- */
     .container {
+        width: 100%;
         max-width: 1200px;
         margin: auto;
-        padding: 0 20px 60px;
+        padding: 0 15px 60px; /* Reduced horizontal padding for smaller screens */
         overflow: hidden;
     }
 
     .product-grid {
         display: grid;
-        /* Adjusted to 250px for better fit on small mobile screens */
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 30px;
+        /* min(100%, 250px) ensures that on devices smaller than 250px, it shrinks to 100% instead of overflowing */
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+        gap: 25px;
         place-items: center;
+        width: 100%;
     } 
 
     /* --- Product Card Styling --- */
@@ -91,13 +100,12 @@
         border-radius: 15px;
         overflow: hidden;
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-        {% comment %} position: relative; {% endcomment %}
         transition: box-shadow 0.3s ease;
-        
-        /* Changed to percentages and max-width for responsiveness */
         width: 100%;
         max-width: 350px; 
         margin: 0 auto;
+        display: flex;
+        flex-direction: column;
     }
 
     .product-card:hover {
@@ -134,6 +142,9 @@
     .details {
         padding: 20px;
         text-align: center;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
     }
 
     .category-tag {
@@ -146,7 +157,7 @@
     }
 
     .product-title {
-        font-size: 20px;
+        font-size: clamp(18px, 4vw, 20px);
         color: #333;
         margin: 5px 0 10px;
         font-weight: 600;
@@ -165,6 +176,9 @@
         display: flex;
         gap: 10px;
         justify-content: center;
+        margin-top: auto; /* Pushes buttons to the bottom of the card */
+        width: 100%;
+        flex-wrap: wrap; /* Prevents buttons from squishing too much on tiny screens */
     }
 
     .btn {
@@ -176,6 +190,7 @@
         cursor: pointer;
         transition: 0.3s;
         flex: 1;
+        min-width: 100px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -194,35 +209,11 @@
     .btn-buy {
         background-color: #ff6b81;
         color: #fff;
+        width: 100%;
     }
 
     .btn-buy:hover {
         background-color: #e0556a;
-    }
-
-    /* --- Mobile Responsiveness Adjustments --- */
-    @media (max-width: 600px) {
-        .menu-header h1 {
-            font-size: 32px; /* Slightly smaller for mobile */
-        }
-
-        .filter-container {
-            gap: 10px;
-        }
-
-        .product-grid {
-            grid-template-columns: 1fr;
-        }
-        
-        /* Adjust Pagination on mobile */
-        .pagination-container {
-            justify-content: center !important;
-            padding-right: 0 !important;
-        }
-        
-        .pagination {
-            margin: 20px 0 0 0 !important;
-        }
     }
 
     /* --- Filter Button (Fixed on Screen) --- */
@@ -255,15 +246,17 @@
     .filter-sidebar {
         height: 100%;
         width: 300px;
-        max-width: 80vw; /* Ensures it doesn't overflow small screens */
+        max-width: 85vw; /* Keeps sidebar usable on mobile without covering 100% */
         position: fixed;
         z-index: 1000;
         top: 0;
         left: -320px; 
         background-color: #fff;
         overflow-x: hidden;
+        overflow-y: auto; /* Allows scrolling inside sidebar */
         transition: 0.4s ease;
         padding-top: 60px;
+        padding-bottom: 30px;
         box-shadow: 2px 0 20px rgba(0,0,0,0.2);
     }
 
@@ -276,28 +269,30 @@
         color: #ff6b81;
         margin-bottom: 30px;
         font-family: 'Pacifico', cursive;
+        font-size: 24px;
     }
 
     /* --- Close Button --- */
     .close-filter-btn {
         position: absolute;
-        top: 10px;
-        right: 25px;
-        font-size: 36px;
+        top: 15px;
+        right: 20px;
+        font-size: 32px;
         color: #888;
         text-decoration: none;
         transition: 0.3s;
         background: none;
         border: none;
         cursor: pointer;
+        line-height: 1;
     }
 
     .close-filter-btn:hover { color: #ff6b81; }
 
     /* --- Options Styling --- */
     .sidebar-section {
-        padding: 0 30px;
-        margin-bottom: 30px;
+        padding: 0 20px;
+        margin-bottom: 25px;
     }
 
     .sidebar-section h3 {
@@ -309,29 +304,22 @@
     }
 
     .sidebar-option {
-        padding: 10px 15px;
+        padding: 8px 0;
         font-size: 15px;
         color: #555;
-        border-radius: 8px;
         cursor: pointer;
-        transition: 0.2s;
-        margin-bottom: 5px;
+        display: flex;
+        align-items: center;
     }
 
-    .sidebar-option:hover {
-        background-color: #fff0f3;
-        color: #ff6b81;
-        padding-left: 20px;
-    }
-
-    .sidebar-option.selected {
-        background-color: #ff6b81;
-        color: white;
-        font-weight: 600;
+    .sidebar-option b {
+        margin-left: 10px;
+        font-weight: 500;
     }
 
     .apply-btn {
-        width: 100%;
+        width: calc(100% - 40px);
+        margin: 0 20px;
         padding: 12px;
         background: #333;
         color: #fff;
@@ -360,6 +348,55 @@
         display: block;
         opacity: 1;
     }
+
+    /* --- Pagination Wrapper --- */
+    .pagination-container {
+        width: 100%; 
+        display: flex; 
+        justify-content: flex-end; 
+        padding-right: 5%;
+    }
+
+    .pagination {
+        margin: 40px 0 0 0;
+        display: flex;
+        flex-wrap: wrap; /* Prevents overflow if pagination gets too long */
+        gap: 5px;
+    }
+
+    /* --- Advanced Mobile Responsiveness Adjustments --- */
+    @media (max-width: 768px) {
+        .menu-header {
+            padding: 30px 15px 20px;
+        }
+
+        .filter-btn {
+            /* Moves the filter button down on mobile so it doesn't cover the header */
+            top: auto;
+            bottom: 20px;
+            padding: 10px 15px;
+            font-size: 14px;
+            box-shadow: -2px -2px 10px rgba(0,0,0,0.15);
+        }
+
+        .product-grid {
+            gap: 15px;
+        }
+
+        .image-box {
+            height: 200px; /* Slightly smaller image on mobile */
+        }
+        
+        .pagination-container {
+            justify-content: center;
+            padding-right: 0;
+        }
+        
+        .pagination {
+            justify-content: center;
+            margin: 20px 0 0 0;
+        }
+    }
 </style>
 
     <div class="menu-header">
@@ -382,34 +419,34 @@
         
             <div class="sidebar-section">
                 <b><h3>Flavour</h3></b>
-                <label for="all"><input type='checkbox' id="all" class="sidebar-option" value="Allflaver" name="flavour" checked><b style="margin-left:10px;">All cake</b></label><br>
+                <label for="all" class="sidebar-option"><input type='checkbox' id="all" value="Allflaver" name="flavour" checked><b>All cake</b></label>
                 {% if flavour %}
                 {% for flav in flavour %}
-                <label for="{{flav.flavour_name}}"><input type='checkbox' id="{{flav.flavour_name}}" name="flavour" class="sidebar-option" value="{{flav.flavour_name}}"><b style="margin-left:10px;">{{flav.flavour_name}}</b></label><br>
+                <label for="{{flav.flavour_name}}" class="sidebar-option"><input type='checkbox' id="{{flav.flavour_name}}" name="flavour" value="{{flav.flavour_name}}"><b>{{flav.flavour_name}}</b></label>
                 {% endfor %}
                 {% endif %}
             </div>
             
             <div class="sidebar-section">
                 <b><h3>Category</h3></b>
-                <label for="Allcategory"><input type='checkbox' id="Allcategory" class="sidebar-option" value="Allcategory" name="category" checked><b style="margin-left:10px;">All cake</b></label><br>
+                <label for="Allcategory" class="sidebar-option"><input type='checkbox' id="Allcategory" value="Allcategory" name="category" checked><b>All cake</b></label>
                 {% if categories %}
                 {% for category in categories %}
-                <label for="{{category.category_name}}"><input type='checkbox' id="{{category.category_name}}" name="category" class="sidebar-option" value="{{category.category_name}}"><b style="margin-left:10px;">{{category.category_name}}</b></label><br>
+                <label for="{{category.category_name}}" class="sidebar-option"><input type='checkbox' id="{{category.category_name}}" name="category" value="{{category.category_name}}"><b>{{category.category_name}}</b></label>
                 {% endfor %}
                 {% endif %}
             </div>
         
             <div class="sidebar-section">
                 <b><h3>Price Range</h3></b>
-                <label for="allprice"><input type='checkbox' id="allprice" class="sidebar-option" value="Allprice" name="price" checked ><b style="margin-left:10px;">All price</b></label><br>
-                <label for="100-200"><input type='checkbox' id="100-200" class="sidebar-option" value="Below_200" name="price"><b style="margin-left:10px;">₹0-200</b></label><br>
-                <label for="200-300"><input type='checkbox' id="200-300" class="sidebar-option" value="Below_300" name="price"><b style="margin-left:10px;">Below ₹300</b></label><br>
-                <label for="300-400"><input type='checkbox' id="300-400" class="sidebar-option" value="Below_400" name="price"><b style="margin-left:10px;">Below ₹400</b></label><br>
-                <label for="400+"><input type='checkbox' id="400+" class="sidebar-option" value="400_above" name="price"><b style="margin-left:10px;">₹400 above</b></label><br>
+                <label for="allprice" class="sidebar-option"><input type='checkbox' id="allprice" value="Allprice" name="price" checked ><b>All price</b></label>
+                <label for="100-200" class="sidebar-option"><input type='checkbox' id="100-200" value="Below_200" name="price"><b>₹0-200</b></label>
+                <label for="200-300" class="sidebar-option"><input type='checkbox' id="200-300" value="Below_300" name="price"><b>Below ₹300</b></label>
+                <label for="300-400" class="sidebar-option"><input type='checkbox' id="300-400" value="Below_400" name="price"><b>Below ₹400</b></label>
+                <label for="400+" class="sidebar-option"><input type='checkbox' id="400+" value="400_above" name="price"><b>₹400 above</b></label>
             </div>
         
-            <div style="padding: 0 30px; margin-bottom: 30px;">
+            <div>
                 <button type="submit" class="apply-btn">
                     Apply Filters
                 </button>
@@ -431,23 +468,22 @@
                     <span class="price">{{prod.p_price}}</span>
                     <div class="btn-group">
                         <a href="{% url 'cart' prod.id %}" class="btn btn-cart"><i class="fas fa-shopping-cart"></i> Cart</a>
-                        <form method="get" action="/product_details" style="flex: 1; display: flex;">
+                        <form method="get" action="/product_details" style="flex: 1; display: flex; width: 100%;">
                             <input type="hidden" value="{{prod.id}}" name="product"/>
-                            <button type="submit" class="btn btn-buy" style="width: 100%;"><i class="fas fa-bolt"></i> Buy Now</button>
+                            <button type="submit" class="btn btn-buy"><i class="fas fa-bolt"></i> Buy Now</button>
                         </form>
                     </div>
                 </div>
             </div>
             {% endfor %}
             {% else %}
-            <h2 style="text-align: center; width: 100%; grid-column: 1 / -1;">Product not found</h2>
+            <h2 style="text-align: center; width: 100%; grid-column: 1 / -1; padding: 20px;">Product not found</h2>
             {% endif %}
         </div>
         
-        <!-- Changed width:100vw to width:100% to stop horizontal scroll -->
-        <div class="pagination-container" style="width:100%; display:flex; justify-content:flex-end; padding-right: 5%;">
+        <div class="pagination-container">
             <nav aria-label="Page navigation example">
-                <ul class="pagination" style="margin:40px 0 0 0;">
+                <ul class="pagination">
                     {% if product.has_previous %}
                     <li class="page-item"><a class="page-link" href="?page={{product.previous_page_number}}">Previous</a>
                     </li>
@@ -490,12 +526,6 @@ function toggleFilterSidebar() {
         overlay.classList.add('active');
     }
 }
-
-function selectFilterOption(element) {
-    const siblings = element.parentElement.querySelectorAll('.sidebar-option');
-    siblings.forEach(sib => sib.classList.remove('selected'));
-    element.classList.add('selected');
-}
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
     integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
@@ -507,4 +537,4 @@ function selectFilterOption(element) {
     integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
     crossorigin="anonymous"></script>
 
-{% endblock body %}
+{% endblock body %} 
