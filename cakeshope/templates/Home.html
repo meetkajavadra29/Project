@@ -1,8 +1,7 @@
 {% extends "base.html" %}
 {% block title %}Our Menu | SweetDelights{% endblock title %}
 {% block body %}
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 
 <style>
     /* --- General Reset & Theme --- */
@@ -76,49 +75,80 @@
     }
 
     /* --- Responsive Grid Layout --- */
-    .container {
-        max-width: 1200px;
-        margin: auto;
-        padding: 0 20px 60px;
-        overflow: hidden;
-    }
-
     .product-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
         gap: 30px;
+        width: 100%;
         place-items: center;
     } 
 
-    /* --- Product Card Styling --- */
-    .product-card {
-        background: #fff;
-        border-radius: 15px;
+    /* Force 1 column strictly on mobile screens */
+    @media (max-width: 600px) {
+        .product-grid {
+            grid-template-columns: 1fr;
+        }
+        .product-card {
+            width: 100%;
+            max-width: 100%;
+        }
+    }
+
+    /* --- Button Fixes --- */
+    .btn-group {
+        display: flex;
+        gap: 10px;
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    /* Force the link (Cart) and the form (Buy Now) to take exactly 50% space */
+    .btn-group > a.btn-cart,
+    .btn-group > form {
+        flex: 1;
+        width: 50%;
+        display: flex;
+        min-width: 0; /* Prevents overflow */
+    }
+
+    /* Make the button fill the form container */
+    .btn-group > form > button.btn-buy {
+        width: 100%;
+    }
+
+    .btn {
+        width: 100%;
+        border: none;
+        padding: 10px 5px;
+        border-radius: 5px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        white-space: nowrap; /* Stops text from breaking to a second line */
         overflow: hidden;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-        transition: box-shadow 0.3s ease;
-        
-        /* Removed fixed widths to prevent overflow on mobile/tablet */
-        width: 100%;
-        max-width: 350px; 
-        margin: 0 auto;
     }
 
-    .product-card:hover {
-        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+    .btn-cart {
+        background-color: #f0f0f0;
+        color: #333;
     }
 
-    .image-box {
-        height: 250px;
-        width: 100%;
-        overflow: hidden;
-        position: relative;
+    .btn-cart:hover {
+        background-color: #e0e0e0;
     }
 
-    .image-box img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
+    .btn-buy {
+        background-color: #ff6b81;
+        color: #fff;
+    }
+
+    .btn-buy:hover {
+        background-color: #e0556a;
     }
 
     /* Sale Badge */
